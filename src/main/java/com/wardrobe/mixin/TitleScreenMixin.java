@@ -10,6 +10,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,7 +21,9 @@ public abstract class TitleScreenMixin extends Screen {
         super(title);
     }
 
+    @Unique
     private int wardrobeBtnX;
+    @Unique
     private int wardrobeBtnY;
 
     @Inject(method = "init", at = @At("RETURN"))
@@ -29,12 +32,14 @@ public abstract class TitleScreenMixin extends Screen {
         this.wardrobeBtnY = this.height / 4 + 48;
 
         this.addDrawableChild(ButtonWidget.builder(Text.literal("🧥 Гардероб"), btn -> {
-            this.client.setScreen(new WardrobeScreen(this));
+            if (this.client != null) {
+                this.client.setScreen(new WardrobeScreen(this));
+            }
         }).dimensions(wardrobeBtnX, wardrobeBtnY, 84, 20).build());
     }
 
-    @Inject(method = "render", at = @At("RETURN"))
-    private void renderPlayerSkinHead(DrawContext context, int mouseX, int mouseY, float delta) {
+    @Inject(method = "render", at = @At("TAIL"))
+    private void renderPlayerSkinHead(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         Identifier skin = ElyAuthManager.getSkinTextureId();
         int headSize = 24;
         int headX = this.wardrobeBtnX + (84 - headSize) / 2;
@@ -42,10 +47,10 @@ public abstract class TitleScreenMixin extends Screen {
 
         if (skin != null) {
             RenderSystem.setShaderTexture(0, skin);
-            // Базовий шар
-            context.drawTexture(skin, headX, headY, headSize, headSize, 8, 8, 8, 8, 64, 64);
-            // Шар волосся/шолома
-            context.drawTexture(skin, headX, headY, headSize, headSize, 40, 8, 8, 8, 64, 64);
+            // Базовий шар голови (8, 8, 8, 8)
+            context.drawTexture(skin, headX, headY, 8, 8, 8, 8, 64, 64);
+            // Шар шолома / волосся (40, 8, 8, 8)
+            context.drawTexture(skin, headX, headY, 40, 8, 8, 8, 64, 64);
             context.drawBorder(headX, headY, headSize, headSize, 0xFF22C55E);
         } else {
             context.fill(headX, headY, headX + headSize, headY + headSize, 0x66000000);

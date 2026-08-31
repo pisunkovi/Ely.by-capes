@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "wardrobe_ely",
+  "version": "${version}",
+  "name": "Ely Wardrobe",
+  "description": "Premium Wardrobe Mod with Ely.by Sync, 3D Player Preview, Animated Capes, Elytras & Community Catalog.",
+  "authors": [
+    "Boltixs"
+  ],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.wardrobe.WardrobeClient"
+    ]
+  },
+  "mixins": [
+    "wardrobe_ely.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

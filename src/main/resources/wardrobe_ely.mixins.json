@@ -5,7 +5,6 @@
   "client": [
     "TitleScreenMixin",
     "GameMenuScreenMixin",
-    "PlayerEntityRendererMixin",
     "CapeFeatureRendererMixin",
     "ElytraFeatureRendererMixin"
   ],

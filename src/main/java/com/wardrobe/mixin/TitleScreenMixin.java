@@ -1,6 +1,5 @@
 package com.wardrobe.mixin;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wardrobe.auth.ElyAuthManager;
 import com.wardrobe.client.gui.WardrobeScreen;
 import net.minecraft.client.gui.DrawContext;
@@ -46,14 +45,13 @@ public abstract class TitleScreenMixin extends Screen {
         int headY = this.wardrobeBtnY - headSize - 4;
 
         if (skin != null) {
-            RenderSystem.setShaderTexture(0, skin);
-            // Базовий шар голови (8, 8, 8, 8)
-            context.drawTexture(skin, headX, headY, 8, 8, 8, 8, 64, 64);
-            // Шар шолома / волосся (40, 8, 8, 8)
-            context.drawTexture(skin, headX, headY, 40, 8, 8, 8, 64, 64);
+            // Базовий шар голови
+            context.drawTexture(skin, headX, headY, headSize, headSize, 8.0f, 8.0f, 8, 8, 64, 64);
+            // Шар шолома / волосся
+            context.drawTexture(skin, headX, headY, headSize, headSize, 40.0f, 8.0f, 8, 8, 64, 64);
             context.drawBorder(headX, headY, headSize, headSize, 0xFF22C55E);
         } else {
-            context.fill(headX, headY, headX + headSize, headY + headSize, 0x66000000);
+            context.fill(headX, headY, headX + headSize, headY + headSize, 0x88000000);
             context.drawBorder(headX, headY, headSize, headSize, 0x88AAAAAA);
         }
     }

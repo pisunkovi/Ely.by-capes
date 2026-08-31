@@ -39,10 +39,3 @@ jobs:
           name: Ely-Wardrobe-Mod
           path: build/libs/*[!sources].jar
           if-no-files-found: error
-```[cite: 1, 11]
-
-### Що виконує цей workflow:
-* **JDK 21 Temurin:** Встановлює відповідну версію Java для Minecraft 1.21.1[cite: 1, 11].
-* **Права на запуск (`chmod +x`):** Запобігає помилці `Permission Denied` при виклику `./gradlew` у Linux[cite: 1, 11].
-* **Збірка (`./gradlew build`):** Компілює мод у чистій конфігурації без фонового демона[cite: 11].
-* **Завантаження артефакту:** Зберігає готовий `.jar` файл мода (виключаючи jar із вихідним кодом `-sources.jar`) у розділі дій репозиторію[cite: 1, 11].

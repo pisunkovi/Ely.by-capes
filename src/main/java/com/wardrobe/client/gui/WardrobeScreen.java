@@ -1,6 +1,5 @@
 package com.wardrobe.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wardrobe.auth.ElyAuthManager;
 import com.wardrobe.client.community.CommunityLibrary;
 import com.wardrobe.client.gui.widget.ProfileButtonWidget;
@@ -22,13 +21,12 @@ import java.util.List;
 
 public class WardrobeScreen extends Screen {
     private final Screen parent;
-    private int currentTab = 0; // 0 = Capes, 1 = Elytras, 2 = Community Catalog
+    private int currentTab = 0;
     private ButtonWidget capesBtn;
     private ButtonWidget elytrasBtn;
     private ButtonWidget communityBtn;
     private ButtonWidget uploadBtn;
     private ButtonWidget syncToggleBtn;
-    private float playerRotation = 0f;
 
     public WardrobeScreen(Screen parent) {
         super(Text.literal("Гардероб"));
@@ -37,12 +35,12 @@ public class WardrobeScreen extends Screen {
 
     @Override
     protected void init() {
-        // Кастомна преміальна кнопка профілю
         this.addDrawableChild(new ProfileButtonWidget(12, 12, 130, 26, btn -> {
-            this.client.setScreen(new ElyProfileScreen(this));
+            if (this.client != null) {
+                this.client.setScreen(new ElyProfileScreen(this));
+            }
         }));
 
-        // Вкладки по центру
         int tabW = 85;
         int startX = this.width / 2 - (tabW * 3 + 10) / 2;
 
@@ -61,10 +59,9 @@ public class WardrobeScreen extends Screen {
             updateButtons();
         }).dimensions(startX + (tabW + 5) * 2, 15, tabW, 20).build());
 
-        // Кнопка завантаження свого файла
         this.uploadBtn = this.addDrawableChild(ButtonWidget.builder(Text.literal("📁 Завантажити PNG/GIF"), btn -> {
             File file = NativeFileDialog.openImagePicker();
-            if (file != null) {
+            if (file != null && this.client != null) {
                 if (file.getName().toLowerCase().endsWith(".gif")) {
                     AnimatedGifTexture gif = GifDecoder.decode(file, "custom_cape_gif");
                     if (gif != null) ElyAuthManager.setAnimatedCape(gif);
@@ -81,7 +78,6 @@ public class WardrobeScreen extends Screen {
             }
         }).dimensions(this.width / 2 - 170, this.height - 40, 160, 22).build());
 
-        // Перемикач одночасного рендеру плаща та крил
         this.syncToggleBtn = this.addDrawableChild(ButtonWidget.builder(
                 Text.literal("Одночасно: " + (ElyAuthManager.isSimultaneousRender() ? "§aВКЛ" : "§cВИКЛ")),
                 btn -> {
@@ -90,9 +86,10 @@ public class WardrobeScreen extends Screen {
                 }
         ).dimensions(this.width / 2 - 2, this.height - 40, 110, 22).build());
 
-        // Кнопка Назад
         this.addDrawableChild(ButtonWidget.builder(Text.literal("Закрити"), btn -> {
-            this.client.setScreen(this.parent);
+            if (this.client != null) {
+                this.client.setScreen(this.parent);
+            }
         }).dimensions(this.width / 2 + 115, this.height - 40, 65, 22).build());
 
         updateButtons();
@@ -108,8 +105,6 @@ public class WardrobeScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        // Фоновий градієнт
-        this.renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
 
         if (!ElyAuthManager.isAuthenticated()) {
@@ -126,16 +121,13 @@ public class WardrobeScreen extends Screen {
             return;
         }
 
-        // 3D Модель персонажа у лівій частині екрана
         int playerBoxX = this.width / 4;
         int playerBoxY = this.height / 2 + 45;
-        playerRotation += delta * 1.5f;
 
-        if (this.client.player != null) {
-            InventoryScreen.drawEntity(context, playerBoxX - 25, playerBoxY - 70, playerBoxX + 25, playerBoxY + 10, 42, 0.0625f, (float)(playerBoxX - mouseX), (float)(playerBoxY - 50 - mouseY), this.client.player);
+        if (this.client != null && this.client.player != null) {
+            InventoryScreen.drawEntity(context, playerBoxX - 35, playerBoxY - 70, playerBoxX + 35, playerBoxY + 15, 30, (float)(playerBoxX - mouseX), (float)(playerBoxY - 45 - mouseY), this.client.player);
         }
 
-        // Права робоча область
         int panelX = this.width / 2 - 30;
         int panelY = 48;
         int panelW = this.width / 2 + 15;
@@ -163,6 +155,8 @@ public class WardrobeScreen extends Screen {
 
     @Override
     public void close() {
-        this.client.setScreen(this.parent);
+        if (this.client != null) {
+            this.client.setScreen(this.parent);
+        }
     }
 }

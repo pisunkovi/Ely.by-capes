@@ -39,19 +39,15 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Inject(method = "render", at = @At("TAIL"))
     private void renderPlayerSkinHead(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        Identifier skin = ElyAuthManager.getSkinTextureId();
         int headSize = 22;
         int headX = this.wardrobeBtnX + (84 - headSize) / 2;
         int headY = this.wardrobeBtnY - headSize - 4;
 
-        if (skin != null && this.client != null && this.client.getTextureManager().getOrDefault(skin, null) != null) {
-            try {
-                // Базовий шар голови
-                context.drawTexture(skin, headX, headY, 8, 8, 8, 8, 64, 64);
-                // Шар шолома
-                context.drawTexture(skin, headX, headY, 40, 8, 8, 8, 64, 64);
-                context.drawBorder(headX, headY, headSize, headSize, 0xFF22C55E);
-            } catch (Exception ignored) {}
+        Identifier skin = ElyAuthManager.getSkinTextureId();
+        if (skin != null) {
+            context.drawTexture(skin, headX, headY, headSize, headSize, 8.0F, 8.0F, 8, 8, 64, 64);
+            context.drawTexture(skin, headX, headY, headSize, headSize, 40.0F, 8.0F, 8, 8, 64, 64);
+            context.drawBorder(headX, headY, headSize, headSize, 0xFF22C55E);
         } else {
             context.fill(headX, headY, headX + headSize, headY + headSize, 0x88181A20);
             context.drawBorder(headX, headY, headSize, headSize, 0x66FFFFFF);

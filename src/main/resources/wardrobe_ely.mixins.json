@@ -4,9 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "TitleScreenMixin",
-    "GameMenuScreenMixin",
-    "CapeFeatureRendererMixin",
-    "ElytraFeatureRendererMixin"
+    "GameMenuScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

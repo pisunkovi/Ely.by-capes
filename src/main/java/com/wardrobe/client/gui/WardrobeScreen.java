@@ -125,7 +125,18 @@ public class WardrobeScreen extends Screen {
         int playerBoxY = this.height / 2 + 45;
 
         if (this.client != null && this.client.player != null) {
-            InventoryScreen.drawEntity(context, playerBoxX - 35, playerBoxY - 70, playerBoxX + 35, playerBoxY + 15, 30, (float)(playerBoxX - mouseX), (float)(playerBoxY - 45 - mouseY), this.client.player);
+            InventoryScreen.drawEntity(
+                    context,
+                    playerBoxX - 35,
+                    playerBoxY - 70,
+                    playerBoxX + 35,
+                    playerBoxY + 15,
+                    30,
+                    0.0625f,
+                    (float)(playerBoxX - mouseX),
+                    (float)(playerBoxY - 45 - mouseY),
+                    this.client.player
+            );
         }
 
         int panelX = this.width / 2 - 30;
